@@ -1,0 +1,52 @@
+# =============================================================================
+# Zsh Profile
+# =============================================================================
+# This file is symlinked to ~/.zprofile
+# Executed for login shells (before .zshrc)
+# =============================================================================
+
+# =============================================================================
+# Homebrew
+# =============================================================================
+# Initialize Homebrew early for login shells
+
+if [[ -f "/opt/homebrew/bin/brew" ]]; then
+    # Apple Silicon
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -f "/usr/local/bin/brew" ]]; then
+    # Intel
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+# =============================================================================
+# Path Additions
+# =============================================================================
+
+# Add local bin to path (for user scripts)
+export PATH="$HOME/.local/bin:$PATH"
+
+# Add dotfiles scripts to path
+export PATH="$HOME/.dotfiles/scripts:$PATH"
+
+# =============================================================================
+# XDG Base Directory Specification
+# =============================================================================
+
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+# Create directories if they don't exist
+[[ -d "$XDG_CONFIG_HOME" ]] || mkdir -p "$XDG_CONFIG_HOME"
+[[ -d "$XDG_DATA_HOME" ]] || mkdir -p "$XDG_DATA_HOME"
+[[ -d "$XDG_CACHE_HOME" ]] || mkdir -p "$XDG_CACHE_HOME"
+[[ -d "$XDG_STATE_HOME" ]] || mkdir -p "$XDG_STATE_HOME"
+
+# =============================================================================
+# Developer Directories
+# =============================================================================
+
+# Create common development directories if they don't exist
+[[ -d "$HOME/Developer" ]] || mkdir -p "$HOME/Developer"
+[[ -d "$HOME/Work" ]] || mkdir -p "$HOME/Work"

@@ -1,0 +1,126 @@
+# =============================================================================
+# Git Configuration
+# =============================================================================
+# This file is symlinked to ~/.gitconfig
+# Note: User name and email are set by scripts/git.sh
+# =============================================================================
+
+[user]
+    name = Wilson Alberto
+    email = wilsonalberto@gmail.com
+
+[credential]
+    helper = osxkeychain
+
+[push]
+    default = simple
+    autoSetupRemote = true
+
+[init]
+    defaultBranch = main
+
+[core]
+    excludesfile = ~/.gitignore_global
+    whitespace = space-before-tab,-indent-with-non-tab,trailing-space
+    trustctime = false
+    editor = nano
+    compression = 0
+    pager = delta
+
+[color]
+    ui = auto
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red
+    new = green
+
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+
+[diff]
+    renames = copies
+
+[help]
+    autocorrect = 1
+
+[merge]
+    log = true
+
+[pull]
+    rebase = true
+
+[interactive]
+    diffFilter = delta --color-only
+
+[add.interactive]
+    useBuiltin = false
+
+[delta]
+    side-by-side = true
+    line-numbers = true
+    syntax-theme = Dracula
+    navigate = true
+    hyperlinks = true
+    features = side-by-side line-numbers decorations
+
+[delta "decorations"]
+    commit-decoration-style = bold yellow box ul
+    file-style = bold yellow ul
+    file-decoration-style = none
+
+# =============================================================================
+# Aliases
+# =============================================================================
+
+[alias]
+    # User switching
+    homeuser = config user.email wilsonalberto@gmail.com
+    workuser = config user.email wilson.alberto@olx.com
+    user = config user.email
+
+    # Commit
+    amend = commit -C HEAD --amend
+    ammend = commit -C HEAD --amend
+
+    # Checkout
+    go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
+    co = checkout
+
+    # Clean
+    rmerged = "!git branch --merged | grep  -v '\\*\\|master\\|develop' | xargs -n 1 git branch -d && git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d"
+    upd = !git pull --all && git fetch --prune && git rmerged
+    fupd = !git co master && git upd
+
+    # Status
+    tags = tag -l
+    branches = branch -a
+    remotes = remote -v
+    lg = log --graph --pretty='format:%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    fd = diff --cached
+    fdif = diff --cached
+    fdiff = diff --cached
+
+    # Shortcuts
+    st = status
+    br = branch
+    ci = commit
+    df = diff
+
+    # List contributors with number of commits
+    contributors = shortlog --summary --numbered
+
+# =============================================================================
+# Include local config if present
+# =============================================================================
+
+[include]
+    path = ~/.gitconfig.local

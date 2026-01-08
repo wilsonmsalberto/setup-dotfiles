@@ -1,0 +1,204 @@
+# =============================================================================
+# Zsh Configuration
+# =============================================================================
+# This file is symlinked to ~/.zshrc
+# Managed by dotfiles: https://github.com/USERNAME/dotfiles
+# =============================================================================
+
+# Source custom functions first
+[[ -f ~/.zsh-functions ]] && source ~/.zsh-functions
+
+# ===== 1. INSTANT PROMPT (CRITICAL - MUST BE FIRST) =====
+# Powerlevel10k instant prompt initialization
+# This MUST remain at the very top for optimal performance
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# ===== 2. ENVIRONMENT VARIABLES =====
+# PNPM
+export PNPM_HOME="$HOME/Library/pnpm"
+export PATH="/opt/homebrew/bin:/opt/homebrew/opt/ruby/bin:$PNPM_HOME:$PATH"
+
+# Editor and system preferences
+export EDITOR='nano'
+export BROWSER='open'
+export MANPAGER='less -X'
+export LESS='-R'
+
+# Language
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
+# Homebrew optimization
+export HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_AUTO_UPDATE_SECS=86400  # Update once per day
+
+# ===== 3. ZSH PLUGIN MANAGER =====
+ZNAP_DIR="$HOME/.zsh-plugins/zsh-snap"
+
+# Download znap if not present
+if [[ ! -d "$ZNAP_DIR" ]]; then
+    git clone --depth 1 https://github.com/marlonrichert/zsh-snap.git "$ZNAP_DIR"
+fi
+
+source "$ZNAP_DIR/znap.zsh"
+
+# ===== 4. PERFORMANCE SETTINGS =====
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE="20"
+ZSH_AUTOSUGGEST_USE_ASYNC=1
+
+# History configuration
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt SHARE_HISTORY
+
+# ===== 5. ZSH PLUGINS (LOAD ORDER MATTERS) =====
+znap source zsh-users/zsh-autosuggestions
+znap source ohmyzsh/ohmyzsh plugins/git
+znap source zsh-users/zsh-history-substring-search
+znap source ohmyzsh/ohmyzsh plugins/emoji
+
+# IMPORTANT: Syntax highlighting must be loaded LAST
+znap source zsh-users/zsh-syntax-highlighting
+
+# ===== 6. COMPLETION SYSTEM =====
+autoload -Uz compinit
+
+# Only regenerate completions if older than 24 hours
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+else
+    compinit -C
+fi
+
+# Docker completion optimizations
+zstyle ':completion:*:*:docker:*' option-stacking yes
+zstyle ':completion:*:*:docker-*:*' option-stacking yes
+
+# Enhanced completion styling
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' cache-path ~/.zcompcache
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+zstyle ':completion:*' menu select
+
+# ===== 7. TOOL INTEGRATIONS =====
+# fnm (Fast Node Manager)
+if command -v fnm >/dev/null 2>&1; then
+    eval "$(fnm env --use-on-cd)"
+fi
+
+# Zoxide (smarter cd)
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+
+# fzf (fuzzy finder)
+if command -v fzf &>/dev/null; then
+    source <(fzf --zsh)
+fi
+
+# ===== 8. POWERLEVEL10K THEME =====
+# Note: Using standalone install in ~/powerlevel10k
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# ===== 9. TERMINAL-SPECIFIC OPTIMIZATIONS =====
+if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+    test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+    export ITERM_ENABLE_SHELL_INTEGRATION_WITH_TMUX=YES
+fi
+
+# ===== 10. TOOL COMPLETIONS =====
+if command -v pnpm >/dev/null 2>&1; then
+    znap eval pnpm-completion 'pnpm completion zsh' 2>/dev/null
+fi
+
+# ===== 11. ENHANCED FILE LISTING (EZA) =====
+if command -v eza > /dev/null 2>&1; then
+    alias ls='eza --color=always --group-directories-first'
+    alias ll='eza -alF --color=always --group-directories-first --icons'
+    alias la='eza -a --color=always --group-directories-first'
+    alias l='eza -F --color=always --group-directories-first'
+    alias lt='eza -T --color=always --group-directories-first --icons --level=3'
+    alias lta='eza -aT --color=always --group-directories-first --icons --level=2'
+    alias ltg='eza -T --git --color=always --group-directories-first --icons --level=2'
+    alias lg='eza -al --git --color=always --group-directories-first --icons'
+else
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        alias ls='ls -G'
+        alias ll='ls -alFG'
+        alias la='ls -AG'
+        alias l='ls -CFG'
+        alias lt='find . -type d -maxdepth 3 | head -20'
+    else
+        alias ls='ls --color=auto'
+        alias ll='ls -alF --color=auto'
+        alias la='ls -A --color=auto'
+        alias l='ls -CF --color=auto'
+    fi
+fi
+
+# ===== 12. COLOR CONFIGURATION =====
+export LS_COLORS='di=1;34:ln=1;36:so=32:pi=33:ex=1;32:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# ===== 13. SYSTEM MONITORING =====
+alias ps='ps aux'
+alias top='top -o cpu'
+alias df='df -h'
+alias du='du -h'
+alias free='vm_stat'
+
+# ===== 14. NAVIGATION =====
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
+# Development directories
+alias work="cd ~/Work"
+
+# ===== 15. UTILITIES =====
+alias reload="source ~/.zshrc"
+alias path='echo -e ${PATH//:/\\n}'
+alias ports="lsof -i -P -n | grep LISTEN"
+alias zshconfig="$EDITOR ~/.zshrc"
+alias gitconfig="$EDITOR ~/.gitconfig"
+
+# ===== 16. KEY BINDINGS =====
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey '^[OA' history-substring-search-up
+bindkey '^[OB' history-substring-search-down
+bindkey '^P' history-substring-search-up
+bindkey '^N' history-substring-search-down
+
+# ===== 17. DIRECTORY OPTIONS =====
+setopt AUTO_CD
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
+
+# ===== 18. ANDROID SDK (for Expo/React Native) =====
+# Uncomment if you use React Native/Expo
+# export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
+# export ANDROID_HOME=$HOME/Library/Android/sdk
+# export PATH=$PATH:$ANDROID_HOME/emulator
+# export PATH=$PATH:$ANDROID_HOME/platform-tools
+
+# ===== 19. LOCAL OVERRIDES =====
+# Load local overrides if present (not tracked in git)
+# Use this for machine-specific settings and API keys
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local

@@ -1,0 +1,177 @@
+# =============================================================================
+# EditorConfig
+# =============================================================================
+# This file is symlinked to ~/.editorconfig
+# https://editorconfig.org
+#
+# EditorConfig helps maintain consistent coding styles between different
+# editors and IDEs. Most modern editors support EditorConfig natively or
+# via plugins.
+# =============================================================================
+
+# Top-most EditorConfig file
+root = true
+
+# =============================================================================
+# Default Settings (all files)
+# =============================================================================
+
+[*]
+# Use UTF-8 encoding
+charset = utf-8
+
+# Unix-style line endings
+end_of_line = lf
+
+# Ensure file ends with a newline
+insert_final_newline = true
+
+# Remove trailing whitespace
+trim_trailing_whitespace = true
+
+# Default indentation
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# JavaScript / TypeScript / JSX / TSX
+# =============================================================================
+
+[*.{js,jsx,ts,tsx,mjs,cjs}]
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# JSON / YAML / TOML
+# =============================================================================
+
+[*.{json,jsonc,json5}]
+indent_style = space
+indent_size = 2
+
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.toml]
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# HTML / CSS / SCSS / LESS
+# =============================================================================
+
+[*.{html,htm}]
+indent_style = space
+indent_size = 2
+
+[*.{css,scss,sass,less}]
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# Markdown
+# =============================================================================
+
+[*.{md,mdx}]
+# Markdown requires trailing whitespace for line breaks
+trim_trailing_whitespace = false
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# Python
+# =============================================================================
+
+[*.py]
+indent_style = space
+indent_size = 4
+max_line_length = 88
+
+# =============================================================================
+# Go
+# =============================================================================
+
+[*.go]
+indent_style = tab
+indent_size = 4
+
+# =============================================================================
+# Shell Scripts
+# =============================================================================
+
+[*.{sh,bash,zsh}]
+indent_style = space
+indent_size = 4
+
+# =============================================================================
+# Makefiles
+# =============================================================================
+
+[Makefile]
+# Makefiles require tabs
+indent_style = tab
+indent_size = 4
+
+[*.mk]
+indent_style = tab
+indent_size = 4
+
+# =============================================================================
+# Configuration Files
+# =============================================================================
+
+[*.{conf,config,ini}]
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# Docker
+# =============================================================================
+
+[Dockerfile*]
+indent_style = space
+indent_size = 2
+
+[docker-compose*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# Git
+# =============================================================================
+
+[.git*]
+indent_style = tab
+
+# =============================================================================
+# Package Manager Files
+# =============================================================================
+
+[{package.json,.npmrc,.yarnrc*}]
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# GraphQL
+# =============================================================================
+
+[*.{graphql,gql}]
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# SQL
+# =============================================================================
+
+[*.sql]
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# XML / SVG
+# =============================================================================
+
+[*.{xml,svg}]
+indent_style = space
+indent_size = 2

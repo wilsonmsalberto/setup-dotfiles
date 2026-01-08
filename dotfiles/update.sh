@@ -1,0 +1,217 @@
+#!/bin/bash
+#
+# Update script for dotfiles
+#
+# Pulls the latest changes and re-applies configurations.
+#
+
+set -e
+set -u
+set -o pipefail
+
+# =============================================================================
+# Logging
+# =============================================================================
+
+info() { echo -e "\033[1;34m[INFO]\033[0m $1"; }
+success() { echo -e "\033[1;32m[SUCCESS]\033[0m $1"; }
+warning() { echo -e "\033[1;33m[WARNING]\033[0m $1"; }
+error() { echo -e "\033[1;31m[ERROR]\033[0m $1"; }
+
+# =============================================================================
+# Configuration
+# =============================================================================
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+# =============================================================================
+# Update Functions
+# =============================================================================
+
+update_dotfiles_repo() {
+    info "Updating dotfiles repository..."
+
+    # Check for uncommitted changes
+    if ! git diff-index --quiet HEAD -- 2>/dev/null; then
+        warning "You have uncommitted changes in the dotfiles repository"
+        read -r -p "Stash changes and continue? [y/N] " answer
+        if [[ "$answer" =~ ^[Yy] ]]; then
+            git stash
+            info "Changes stashed"
+        else
+            error "Please commit or stash your changes first"
+            exit 1
+        fi
+    fi
+
+    # Pull latest changes
+    git pull origin main || git pull origin master
+
+    success "Dotfiles repository updated"
+}
+
+update_homebrew() {
+    info "Updating Homebrew..."
+
+    brew update
+    brew upgrade
+
+    info "Installing any new packages from Brewfile..."
+    brew bundle --file="$SCRIPT_DIR/Brewfile" --no-lock || true
+
+    # Cleanup
+    brew cleanup -s
+
+    success "Homebrew updated"
+}
+
+update_znap_plugins() {
+    info "Updating zsh-snap plugins..."
+
+    local znap_dir="$HOME/.zsh-plugins/zsh-snap"
+    if [[ -d "$znap_dir" ]]; then
+        cd "$znap_dir"
+        git pull --quiet
+        cd "$SCRIPT_DIR"
+        success "zsh-snap updated"
+    else
+        warning "zsh-snap not found, run ./scripts/shell.sh to install"
+    fi
+
+    # Note: znap plugins are updated when zsh starts
+    info "Plugin updates will be applied on next shell restart"
+}
+
+update_node() {
+    info "Checking for Node.js updates..."
+
+    if command -v fnm &>/dev/null; then
+        eval "$(fnm env --shell bash)"
+
+        # Install latest LTS if not already installed
+        fnm install --lts
+        fnm default lts-latest
+
+        success "Node.js LTS checked/updated"
+    else
+        warning "fnm not found, skipping Node.js update"
+    fi
+}
+
+reapply_symlinks() {
+    info "Re-applying symlinks..."
+
+    local config_dir="$SCRIPT_DIR/config"
+
+    # Create symlinks (safe with -f flag)
+    ln -sf "$config_dir/zshrc" "$HOME/.zshrc"
+    ln -sf "$config_dir/zprofile" "$HOME/.zprofile"
+    ln -sf "$config_dir/zsh-functions" "$HOME/.zsh-functions"
+    ln -sf "$config_dir/p10k.zsh" "$HOME/.p10k.zsh"
+    ln -sf "$config_dir/gitconfig" "$HOME/.gitconfig"
+    ln -sf "$config_dir/gitignore_global" "$HOME/.gitignore_global"
+    ln -sf "$config_dir/editorconfig" "$HOME/.editorconfig"
+
+    success "Symlinks updated"
+}
+
+# =============================================================================
+# Main
+# =============================================================================
+
+main() {
+    echo ""
+    echo "=============================================="
+    echo "  Dotfiles Update"
+    echo "=============================================="
+    echo ""
+
+    # Parse arguments
+    local update_all=false
+    local update_repo=true
+    local update_brew=false
+    local update_plugins=false
+    local update_node_flag=false
+
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --all)
+                update_all=true
+                shift
+                ;;
+            --brew)
+                update_brew=true
+                shift
+                ;;
+            --plugins)
+                update_plugins=true
+                shift
+                ;;
+            --node)
+                update_node_flag=true
+                shift
+                ;;
+            --no-pull)
+                update_repo=false
+                shift
+                ;;
+            --help|-h)
+                echo "Usage: ./update.sh [OPTIONS]"
+                echo ""
+                echo "Options:"
+                echo "  --all       Update everything (repo, brew, plugins, node)"
+                echo "  --brew      Update Homebrew packages"
+                echo "  --plugins   Update zsh-snap plugins"
+                echo "  --node      Update Node.js to latest LTS"
+                echo "  --no-pull   Skip git pull"
+                echo "  --help      Show this help"
+                exit 0
+                ;;
+            *)
+                error "Unknown option: $1"
+                exit 1
+                ;;
+        esac
+    done
+
+    # If --all flag, enable everything
+    if [[ "$update_all" == true ]]; then
+        update_brew=true
+        update_plugins=true
+        update_node_flag=true
+    fi
+
+    # Run updates
+    if [[ "$update_repo" == true ]]; then
+        update_dotfiles_repo
+        echo ""
+    fi
+
+    reapply_symlinks
+    echo ""
+
+    if [[ "$update_brew" == true ]]; then
+        update_homebrew
+        echo ""
+    fi
+
+    if [[ "$update_plugins" == true ]]; then
+        update_znap_plugins
+        echo ""
+    fi
+
+    if [[ "$update_node_flag" == true ]]; then
+        update_node
+        echo ""
+    fi
+
+    echo "=============================================="
+    success "Update complete!"
+    echo "=============================================="
+    echo ""
+    info "Restart your terminal or run: source ~/.zshrc"
+    echo ""
+}
+
+main "$@"

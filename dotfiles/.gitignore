@@ -1,0 +1,16 @@
+# Environment file with personal settings
+.env
+
+# macOS files
+.DS_Store
+._*
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Backup directory (if accidentally in repo)
+.dotfiles_backup/
