@@ -1,4 +1,4 @@
-# macOS Dotfiles
+# macOS Setup Dotfiles
 
 Automated setup for a new macOS machine, optimized for Frontend Engineering (React, TypeScript, Next.js).
 
@@ -7,7 +7,7 @@ Automated setup for a new macOS machine, optimized for Frontend Engineering (Rea
 Run this single command on a fresh macOS installation:
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/USERNAME/dotfiles/main/bootstrap.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmsalberto/setup-dotfiles/main/bootstrap.sh)"
 ```
 
 Then follow the on-screen instructions.
@@ -32,17 +32,19 @@ Then follow the on-screen instructions.
 ### Applications
 - **iTerm2** - Terminal emulator
 - **MesloLGS NF** - Nerd Font for terminal
-- Quick Look plugins (qlcolorcode, qlstephen, qlmarkdown)
+- Quick Look plugins (qlcolorcode, qlstephen, qlmarkdown, webpquicklook)
 
 ### Optional Apps (interactive installation)
-- Code editors (VS Code, Cursor)
-- Docker, Postman
-- Rectangle, Maccy
-- Browsers, communication tools, and more
+
+- Postman, TablePlus
+- Arc browser
+- Notion, Obsidian
+- VLC, Discord
+- Menu bar utilities (Caffeine, noTunes)
 
 ## Prerequisites
 
-- macOS Sequoia 15.5+ (Apple Silicon recommended)
+- macOS Sonoma 14.0+ (Apple Silicon recommended)
 - Admin access for initial setup
 - Internet connection
 
@@ -54,16 +56,15 @@ For a completely fresh machine:
 
 ```bash
 # Download and run bootstrap script
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/USERNAME/dotfiles/main/bootstrap.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmsalberto/setup-dotfiles/main/bootstrap.sh)"
 
 # Navigate to dotfiles directory
 cd ~/.dotfiles
 
-# Copy and edit environment variables
-cp .env.example .env
-nano .env
+# Run the setup wizard (configures your preferences)
+./setup.sh
 
-# Run installation
+# Or run installation directly
 ./install.sh
 ```
 
@@ -72,11 +73,10 @@ nano .env
 If you already have Git and Homebrew:
 
 ```bash
-git clone https://github.com/USERNAME/dotfiles.git ~/.dotfiles
+git clone https://github.com/wilsonmsalberto/setup-dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-cp .env.example .env
-nano .env
-./install.sh
+./setup.sh    # Configure your preferences
+./install.sh  # Run installation
 ```
 
 ### Installation Modes
@@ -142,15 +142,18 @@ Run the test script to verify installation:
 ## Directory Structure
 
 ```
-dotfiles/
+setup-dotfiles/
 ├── README.md                    # This file
 ├── bootstrap.sh                 # Initial bootstrap script
+├── setup.sh                     # Setup wizard for configuration
 ├── install.sh                   # Main installation script
 ├── uninstall.sh                 # Revert changes
 ├── update.sh                    # Update dotfiles
 ├── test.sh                      # Verification script
 ├── Brewfile                     # Homebrew packages
 ├── .env.example                 # Environment variables template
+├── lib/
+│   └── common.sh                # Shared functions library
 ├── scripts/
 │   ├── brew.sh                  # Homebrew installation
 │   ├── macos.sh                 # macOS defaults
@@ -171,16 +174,30 @@ dotfiles/
 
 ## Customization
 
-### Adding Environment Variables
+### Using the Setup Wizard
 
-Edit `.env` file:
+The setup wizard (`./setup.sh`) will prompt you for:
+
+- Git user name
+- Git email (personal)
+- Git email (work)
+
+It creates a `.env` file with your settings. You can also run it with defaults:
 
 ```bash
-# User information
-GIT_USER_NAME="Your Name"
-GIT_USER_EMAIL="your@email.com"
-GIT_WORK_EMAIL="work@company.com"
-GIT_HOME_EMAIL="personal@email.com"
+./setup.sh --defaults
+```
+
+### Environment Variables
+
+The `.env` file supports these variables:
+
+```bash
+# Git Configuration
+GIT_USER_NAME="Wilson Alberto"
+GIT_USER_EMAIL="wilsonalberto@gmail.com"
+GIT_WORK_EMAIL="wilson.alberto@olx.com"
+GIT_HOME_EMAIL="wilsonalberto@gmail.com"
 ```
 
 ### Adding Homebrew Packages
@@ -243,8 +260,10 @@ myip
 # Quick HTTP server
 serve 8080
 
-# Create React component
-newcomponent MyComponent
+# Docker management
+docker_info    # Show containers, images, volumes
+docker_rmc     # Remove all containers
+docker_hr      # Hard reset Docker (destructive!)
 ```
 
 ### Git Aliases
@@ -253,10 +272,9 @@ newcomponent MyComponent
 git st          # status
 git lg          # pretty log
 git co branch   # checkout
-git cob branch  # checkout -b
+git go branch   # checkout or create branch
 git amend       # amend last commit
-git uncommit    # undo last commit (soft)
-git cleanup     # delete merged branches
+git upd         # pull all and prune merged branches
 git workuser    # switch to work email
 git homeuser    # switch to home email
 ```

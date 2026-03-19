@@ -7,7 +7,7 @@
 # - Git (via Homebrew)
 #
 # Usage:
-#   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/USERNAME/dotfiles/main/bootstrap.sh)"
+#   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmsalberto/setup-dotfiles/main/bootstrap.sh)"
 #
 
 set -e
@@ -18,7 +18,7 @@ set -o pipefail
 # Configuration
 # =============================================================================
 
-DOTFILES_REPO="https://github.com/USERNAME/dotfiles.git"
+DOTFILES_REPO="https://github.com/wilsonmsalberto/setup-dotfiles.git"
 DOTFILES_DIR="$HOME/.dotfiles"
 
 # =============================================================================
@@ -29,6 +29,23 @@ info() { echo -e "\033[1;34m[INFO]\033[0m $1"; }
 success() { echo -e "\033[1;32m[SUCCESS]\033[0m $1"; }
 warning() { echo -e "\033[1;33m[WARNING]\033[0m $1"; }
 error() { echo -e "\033[1;31m[ERROR]\033[0m $1"; }
+
+# =============================================================================
+# Error Handling
+# =============================================================================
+
+cleanup() {
+    local exit_code=$?
+    if [[ $exit_code -ne 0 ]]; then
+        echo ""
+        error "Bootstrap failed with exit code $exit_code"
+        echo ""
+        echo "Please check the error messages above and try again."
+        echo "If the issue persists, please report it at:"
+        echo "  https://github.com/wilsonmsalberto/setup-dotfiles/issues"
+    fi
+}
+trap cleanup EXIT
 
 # =============================================================================
 # Helper Functions
@@ -252,16 +269,15 @@ main() {
     echo ""
     echo "  1. cd $DOTFILES_DIR"
     echo ""
-    echo "  2. Copy and edit the environment file:"
-    echo "     cp .env.example .env"
-    echo "     nano .env"
+    echo "  2. Run the setup wizard:"
+    echo "     ./setup.sh"
     echo ""
-    echo "  3. Run the installation script:"
+    echo "  Or run installation directly:"
     echo "     ./install.sh              # Interactive mode"
     echo "     ./install.sh --minimal    # CLI tools only"
     echo "     ./install.sh --full       # Everything"
     echo ""
-    echo "  4. Restart your terminal or run:"
+    echo "  3. Restart your terminal or run:"
     echo "     source ~/.zshrc"
     echo ""
 }

@@ -29,18 +29,42 @@ DRY_RUN=false
 VERBOSE=false
 
 # =============================================================================
-# Logging Functions
+# Source common library if available, otherwise define functions
 # =============================================================================
 
-info() { echo -e "\033[1;34m[INFO]\033[0m $1"; }
-success() { echo -e "\033[1;32m[SUCCESS]\033[0m $1"; }
-warning() { echo -e "\033[1;33m[WARNING]\033[0m $1"; }
-error() { echo -e "\033[1;31m[ERROR]\033[0m $1"; }
+if [[ -f "$SCRIPT_DIR/lib/common.sh" ]]; then
+    source "$SCRIPT_DIR/lib/common.sh"
+else
+    # Fallback definitions
+    info() { echo -e "\033[1;34m[INFO]\033[0m $1"; }
+    success() { echo -e "\033[1;32m[SUCCESS]\033[0m $1"; }
+    warning() { echo -e "\033[1;33m[WARNING]\033[0m $1"; }
+    error() { echo -e "\033[1;31m[ERROR]\033[0m $1"; }
+fi
+
 debug() {
     if [[ "$VERBOSE" == true ]]; then
         echo -e "\033[1;35m[DEBUG]\033[0m $1"
     fi
 }
+
+# =============================================================================
+# Error Handling
+# =============================================================================
+
+cleanup() {
+    local exit_code=$?
+    if [[ $exit_code -ne 0 ]]; then
+        echo ""
+        error "Installation failed with exit code $exit_code"
+        echo ""
+        if [[ -d "$BACKUP_DIR" ]]; then
+            info "Your original files are backed up in: $BACKUP_DIR"
+            info "Run ./uninstall.sh to restore them"
+        fi
+    fi
+}
+trap cleanup EXIT
 
 # =============================================================================
 # Helper Functions

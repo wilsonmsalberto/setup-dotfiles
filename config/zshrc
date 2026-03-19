@@ -125,7 +125,7 @@ fi
 
 # ===== 11. ENHANCED FILE LISTING (EZA) =====
 if command -v eza > /dev/null 2>&1; then
-    alias ls='eza --color=always --group-directories-first'
+    alias ls='eza -a --color=always --group-directories-first'
     alias ll='eza -alF --color=always --group-directories-first --icons'
     alias la='eza -a --color=always --group-directories-first'
     alias l='eza -F --color=always --group-directories-first'

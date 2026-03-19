@@ -13,20 +13,24 @@ set -u
 set -o pipefail
 
 # =============================================================================
-# Logging
-# =============================================================================
-
-info() { echo -e "\033[1;34m[INFO]\033[0m $1"; }
-success() { echo -e "\033[1;32m[SUCCESS]\033[0m $1"; }
-warning() { echo -e "\033[1;33m[WARNING]\033[0m $1"; }
-error() { echo -e "\033[1;31m[ERROR]\033[0m $1"; }
-
-# =============================================================================
 # Configuration
 # =============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_BASE_DIR="$HOME/.dotfiles_backup"
+
+# =============================================================================
+# Source common library if available
+# =============================================================================
+
+if [[ -f "$SCRIPT_DIR/lib/common.sh" ]]; then
+    source "$SCRIPT_DIR/lib/common.sh"
+else
+    info() { echo -e "\033[1;34m[INFO]\033[0m $1"; }
+    success() { echo -e "\033[1;32m[SUCCESS]\033[0m $1"; }
+    warning() { echo -e "\033[1;33m[WARNING]\033[0m $1"; }
+    error() { echo -e "\033[1;31m[ERROR]\033[0m $1"; }
+fi
 
 # Files that were symlinked
 SYMLINKED_FILES=(
@@ -57,11 +61,34 @@ remove_symlink() {
 find_latest_backup() {
     local filename=$1
 
-    # Find the most recent backup
-    local latest_backup
-    latest_backup=$(find "$BACKUP_BASE_DIR" -name "$filename" -type f 2>/dev/null | sort -r | head -n1)
+    # Find the most recent backup directory
+    local latest_dir
+    latest_dir=$(ls -1dt "$BACKUP_BASE_DIR"/*/ 2>/dev/null | head -n1)
 
-    echo "$latest_backup"
+    if [[ -n "$latest_dir" ]] && [[ -f "$latest_dir/$filename" ]]; then
+        echo "$latest_dir/$filename"
+    else
+        # Fallback: search all backup directories
+        find "$BACKUP_BASE_DIR" -name "$filename" -type f 2>/dev/null | sort -r | head -n1
+    fi
+}
+
+restore_from_manifest() {
+    local backup_dir=$1
+
+    if [[ -f "$backup_dir/.manifest" ]]; then
+        info "Restoring from manifest..."
+        while IFS= read -r original_path; do
+            local filename
+            filename=$(basename "$original_path")
+            if [[ -f "$backup_dir/$filename" ]]; then
+                cp -a "$backup_dir/$filename" "$original_path"
+                success "Restored: $original_path"
+            fi
+        done < "$backup_dir/.manifest"
+        return 0
+    fi
+    return 1
 }
 
 restore_backup() {
@@ -102,7 +129,7 @@ restore_backups() {
 
     echo ""
     info "Available backup directories:"
-    ls -1 "$BACKUP_BASE_DIR" 2>/dev/null || echo "  (none)"
+    ls -1t "$BACKUP_BASE_DIR" 2>/dev/null || echo "  (none)"
     echo ""
 
     read -r -p "Restore from backups? [y/N] " answer
@@ -111,8 +138,22 @@ restore_backups() {
         return 0
     fi
 
-    info "Restoring from backups..."
+    # Find the most recent backup directory
+    local latest_dir
+    latest_dir=$(ls -1dt "$BACKUP_BASE_DIR"/*/ 2>/dev/null | head -n1)
 
+    if [[ -n "$latest_dir" ]]; then
+        info "Using most recent backup: $(basename "$latest_dir")"
+
+        # Try manifest-based restore first
+        if restore_from_manifest "$latest_dir"; then
+            success "Backups restored from manifest"
+            return 0
+        fi
+    fi
+
+    # Fall back to file-by-file restore
+    info "Restoring files individually..."
     for file in "${SYMLINKED_FILES[@]}"; do
         restore_backup "$file"
     done
