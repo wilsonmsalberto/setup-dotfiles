@@ -378,6 +378,97 @@ test_applications() {
 }
 
 # =============================================================================
+# Claude Code Tests
+# =============================================================================
+
+test_claude_code() {
+    echo ""
+    info "Testing Claude Code..."
+
+    test_command "claude" "Claude Code CLI"
+    test_file "$HOME/.claude/CLAUDE.md" "Claude Code CLAUDE.md"
+    test_file "$HOME/.claude/settings.json" "Claude Code settings"
+    test_directory "$HOME/.claude/hooks" "Claude Code hooks"
+    test_directory "$HOME/.claude/rules" "Claude Code rules"
+
+    # Test hooks are executable
+    if [[ -d "$HOME/.claude/hooks" ]]; then
+        local hook_count=0
+        local exec_count=0
+        for hook in "$HOME/.claude/hooks/"*; do
+            [[ -f "$hook" ]] || continue
+            ((hook_count++))
+            [[ -x "$hook" ]] && ((exec_count++))
+        done
+        if [[ $hook_count -gt 0 ]]; then
+            if [[ $exec_count -eq $hook_count ]]; then
+                pass "All $hook_count hook(s) are executable"
+            else
+                warn "$exec_count/$hook_count hooks are executable"
+            fi
+        fi
+    fi
+
+    # Test Work tier
+    if [[ -d "$HOME/Work" ]]; then
+        test_directory "$HOME/Work/.claude" "Work-tier Claude config"
+    fi
+}
+
+# =============================================================================
+# Cursor Tests
+# =============================================================================
+
+test_cursor() {
+    echo ""
+    info "Testing Cursor..."
+
+    if [[ -d "/Applications/Cursor.app" ]]; then
+        pass "Cursor is installed"
+    else
+        warn "Cursor is NOT installed"
+        return 0
+    fi
+
+    local cursor_user_dir="$HOME/Library/Application Support/Cursor/User"
+    test_file "$cursor_user_dir/settings.json" "Cursor settings"
+    test_file "$cursor_user_dir/keybindings.json" "Cursor keybindings"
+
+    # Count extensions
+    if command -v cursor &>/dev/null; then
+        local ext_count
+        ext_count=$(cursor --list-extensions 2>/dev/null | wc -l | tr -d ' ')
+        if [[ "$ext_count" -gt 0 ]]; then
+            pass "Cursor has $ext_count extension(s) installed"
+        else
+            warn "No Cursor extensions found"
+        fi
+    else
+        warn "Cursor CLI not in PATH (install Shell Command from Command Palette)"
+    fi
+}
+
+# =============================================================================
+# iTerm2 Config Tests
+# =============================================================================
+
+test_iterm2_config() {
+    echo ""
+    info "Testing iTerm2 configuration..."
+
+    local dyn_profiles="$HOME/Library/Application Support/iTerm2/DynamicProfiles"
+    if [[ -d "$dyn_profiles" ]]; then
+        if ls "$dyn_profiles"/*.json &>/dev/null 2>&1; then
+            pass "iTerm2 Dynamic Profile(s) found"
+        else
+            warn "No iTerm2 Dynamic Profiles found"
+        fi
+    else
+        warn "iTerm2 DynamicProfiles directory not found"
+    fi
+}
+
+# =============================================================================
 # Environment File Tests
 # =============================================================================
 
@@ -452,6 +543,9 @@ run_tests() {
     test_ssh
     test_directories
     test_applications
+    test_claude_code
+    test_cursor
+    test_iterm2_config
     test_env_file
     test_security
 }

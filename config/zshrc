@@ -18,7 +18,8 @@ fi
 # ===== 2. ENVIRONMENT VARIABLES =====
 # PNPM
 export PNPM_HOME="$HOME/Library/pnpm"
-export PATH="/opt/homebrew/bin:/opt/homebrew/opt/ruby/bin:$PNPM_HOME:$PATH"
+export PATH="/opt/homebrew/bin:/opt/homebrew/opt/ruby/bin:/opt/homebrew/opt/openjdk@17/bin:$PNPM_HOME:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # Editor and system preferences
 export EDITOR='nano'
@@ -33,6 +34,16 @@ export LC_ALL="en_US.UTF-8"
 # Homebrew optimization
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_AUTO_UPDATE_SECS=86400  # Update once per day
+
+# Java (for React Native / Expo)
+export JAVA_HOME=$(/usr/libexec/java_home -v 17 2>/dev/null || echo "/opt/homebrew/opt/openjdk@17")
+export PATH="$JAVA_HOME/bin:$PATH"
+export CPPFLAGS="-I/opt/homebrew/opt/openjdk@17/include"
+
+# Android SDK (for React Native / Expo)
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # ===== 3. ZSH PLUGIN MANAGER =====
 ZNAP_DIR="$HOME/.zsh-plugins/zsh-snap"
@@ -87,9 +98,14 @@ zstyle ':completion:*' cache-path ~/.zcompcache
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
+zstyle ':completion:*:messages' format '%d'
 zstyle ':completion:*:warnings' format 'No matches for: %d'
 zstyle ':completion:*:default' list-prompt '%S%M matches%s'
 zstyle ':completion:*' menu select
+
+# Git-specific completion optimizations
+zstyle ':completion:*:*:git:*' tag-order 'common-commands'
 
 # ===== 7. TOOL INTEGRATIONS =====
 # fnm (Fast Node Manager)
@@ -155,14 +171,20 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-# ===== 13. SYSTEM MONITORING =====
+# ===== 13. MODERN CLI REPLACEMENTS =====
+# Use modern alternatives when available
+alias cat="bat"
+alias grep="rg"
+alias find="fd"
+
+# ===== 14. SYSTEM MONITORING =====
 alias ps='ps aux'
 alias top='top -o cpu'
 alias df='df -h'
 alias du='du -h'
 alias free='vm_stat'
 
-# ===== 14. NAVIGATION =====
+# ===== 15. NAVIGATION =====
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -170,14 +192,14 @@ alias ....="cd ../../.."
 # Development directories
 alias work="cd ~/Work"
 
-# ===== 15. UTILITIES =====
+# ===== 16. UTILITIES =====
 alias reload="source ~/.zshrc"
 alias path='echo -e ${PATH//:/\\n}'
 alias ports="lsof -i -P -n | grep LISTEN"
 alias zshconfig="$EDITOR ~/.zshrc"
 alias gitconfig="$EDITOR ~/.gitconfig"
 
-# ===== 16. KEY BINDINGS =====
+# ===== 17. KEY BINDINGS =====
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 bindkey '^[OA' history-substring-search-up
@@ -185,18 +207,11 @@ bindkey '^[OB' history-substring-search-down
 bindkey '^P' history-substring-search-up
 bindkey '^N' history-substring-search-down
 
-# ===== 17. DIRECTORY OPTIONS =====
+# ===== 18. DIRECTORY OPTIONS =====
 setopt AUTO_CD
 setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
 setopt PUSHD_SILENT
-
-# ===== 18. ANDROID SDK (for Expo/React Native) =====
-# Uncomment if you use React Native/Expo
-# export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
-# export ANDROID_HOME=$HOME/Library/Android/sdk
-# export PATH=$PATH:$ANDROID_HOME/emulator
-# export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # ===== 19. LOCAL OVERRIDES =====
 # Load local overrides if present (not tracked in git)

@@ -296,6 +296,26 @@ install_optional_apps() {
     run_script "$SCRIPTS_DIR/apps.sh"
 }
 
+configure_claude_code() {
+    info "Configuring Claude Code..."
+    run_script "$SCRIPTS_DIR/claude-code.sh"
+}
+
+configure_cursor() {
+    info "Configuring Cursor editor..."
+    run_script "$SCRIPTS_DIR/cursor.sh"
+}
+
+configure_iterm2() {
+    info "Configuring iTerm2..."
+    run_script "$SCRIPTS_DIR/iterm2.sh"
+}
+
+configure_extras() {
+    info "Configuring extras (GitHub CLI, Espanso)..."
+    run_script "$SCRIPTS_DIR/extras.sh"
+}
+
 # =============================================================================
 # Interactive Mode
 # =============================================================================
@@ -339,6 +359,26 @@ run_interactive() {
     if ask_yes_no "Install optional GUI applications?" "n"; then
         install_optional_apps
     fi
+
+    # Claude Code
+    if ask_yes_no "Configure Claude Code?" "y"; then
+        configure_claude_code
+    fi
+
+    # Cursor
+    if ask_yes_no "Configure Cursor editor?" "y"; then
+        configure_cursor
+    fi
+
+    # iTerm2
+    if ask_yes_no "Configure iTerm2 profile?" "y"; then
+        configure_iterm2
+    fi
+
+    # Extras (GH CLI, Espanso)
+    if ask_yes_no "Configure extras (GitHub CLI, Espanso)?" "y"; then
+        configure_extras
+    fi
 }
 
 # =============================================================================
@@ -356,6 +396,7 @@ run_minimal() {
     configure_shell
     configure_git
     setup_node
+    configure_claude_code
 }
 
 # =============================================================================
@@ -375,6 +416,10 @@ run_full() {
     configure_macos
     setup_node
     install_optional_apps
+    configure_claude_code
+    configure_cursor
+    configure_iterm2
+    configure_extras
 }
 
 # =============================================================================
@@ -415,6 +460,13 @@ print_summary() {
         echo "     ./scripts/apps.sh"
         echo ""
     fi
+
+    echo "  5. Configure additional tools (if not done):"
+    echo "     ./scripts/claude-code.sh    # Claude Code config"
+    echo "     ./scripts/cursor.sh         # Cursor editor"
+    echo "     ./scripts/iterm2.sh         # iTerm2 profile"
+    echo "     ./scripts/extras.sh         # GH CLI, Espanso"
+    echo ""
 
     echo "  For verification, run:"
     echo "     ./test.sh"

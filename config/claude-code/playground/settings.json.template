@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "additionalDirectories": [
+      "{{HOME}}/Playground"
+    ],
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(npx:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm run:*)",
+      "Bash(yarn add:*)",
+      "Bash(yarn run:*)",
+      "Bash(bun install:*)",
+      "Bash(bun run:*)",
+      "Bash(expo:*)",
+      "Bash(eas:*)",
+      "Bash(pod install:*)",
+      "Bash(npx react-native:*)",
+      "Bash(npx expo:*)"
+    ]
+  },
+  "enabledPlugins": {
+    "firebase@claude-plugins-official": true,
+    "frontend-mobile-development@claude-code-workflows": true,
+    "vercel@claude-plugins-official": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/hooks/security-check.js"
+          }
+        ]
+      }
+    ]
+  }
+}

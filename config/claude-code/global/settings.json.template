@@ -1,0 +1,219 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "WebSearch",
+      "WebFetch",
+      "Bash(ls:*)",
+      "Bash(pwd:*)",
+      "Bash(which:*)",
+      "Bash(whoami:*)",
+      "Bash(date:*)",
+      "Bash(uname:*)",
+      "Bash(ps:*)",
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(bun *)",
+      "Bash(make:*)",
+      "Bash(tsc:*)",
+      "Bash(npx:*)",
+      "Bash(jest:*)",
+      "Bash(vitest:*)",
+      "Bash(playwright:*)",
+      "Bash(pytest:*)",
+      "Bash(go test:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker images:*)",
+      "Bash(docker logs:*)",
+      "Bash(eslint:*)",
+      "Bash(prettier:*)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)",
+      "Bash(pgrep:*)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(echo:*)",
+      "Bash(node -e:*)",
+      "Bash(node --version)",
+      "Bash(claude:*)",
+      "Bash(vercel:*)",
+      "Bash(gh:*)",
+      "Bash(python3:*)",
+      "Bash(test:*)",
+      "Bash(sort:*)",
+      "Bash(gh auth status:*)",
+      "Bash(sysctl:*)",
+      "Bash(system_profiler:*)",
+      "Bash(vm_stat:*)",
+      "Bash(memory_pressure)",
+      "Bash(top:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(xargs:*)",
+      "Bash(diff:*)",
+      "mcp__context7__*",
+      "mcp__firecrawl-mcp__*",
+      "mcp__plugin_firebase_firebase__firebase_login",
+      "Read(//{{HOME}}/Screenshots/**)",
+      "Read(//{{HOME}}/.claude/**)",
+      "Read(//{{HOME}}/Work/**)",
+      "Read(//{{HOME}}/Library/**)",
+      "Read(//{{HOME}}/Playground/**)",
+      "mcp__chrome-devtools__list_pages",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__chrome-devtools__take_snapshot",
+      "mcp__chrome-devtools__click",
+      "mcp__chrome-devtools__evaluate_script",
+      "mcp__chrome-devtools__list_network_requests",
+      "mcp__plugin_figma_figma__get_design_context",
+      "mcp__plugin_figma_figma__get_metadata",
+      "mcp__plugin_figma_figma__get_screenshot",
+      "mcp__plugin_figma_figma__get_variable_defs",
+      "mcp__plugin_figma_figma__get_code_connect_suggestions",
+      "mcp__plugin_figma_figma__get_code_connect_map",
+      "mcp__plugin_figma_figma__get_figjam",
+      "mcp__plugin_figma_figma__whoami",
+      "Bash(2)",
+      "Bash(find . -type f \\\\\\(-name *.md -path ./.claude/* \\\\\\))",
+      "Bash(find {{HOME}}/Work/graphql/src/domain/saved-searches -type f \\\\\\(-name *.ts -o -name *.tsx -o -name *.json \\\\\\))",
+      "Bash(find {{HOME}}/Work/optimus-web/packages/saved-searches -type f \\\\\\(-name *.ts -o -name *.tsx -o -name *.graphql -o -name *.js \\\\\\))",
+      "Bash(find {{HOME}}/Work/optimus-web/packages/professionals -path *saved-search* -type f \\\\\\(-name *.ts -o -name *.tsx \\\\\\))"
+    ],
+    "deny": [
+      "Bash(sudo:*)",
+      "Bash(su:*)",
+      "Bash(shutdown:*)",
+      "Bash(reboot:*)",
+      "Bash(rm -rf /:*)",
+      "Bash(rm -rf /*:*)",
+      "Bash(dd:*)",
+      "Bash(mkfs:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git push --force:*)",
+      "Bash(git rebase:*)",
+      "Bash(git merge:*)",
+      "Bash(git reset:*)",
+      "Bash(git clean:*)",
+      "Bash(git add:*)",
+      "Bash(git stash:*)",
+      "Bash(docker rm:*)",
+      "Bash(docker rmi:*)",
+      "Bash(docker system prune:*)",
+      "Write(/etc/*)",
+      "Write(/sys/*)",
+      "Write(/proc/*)",
+      "Write(~/.ssh/*)",
+      "Write(~/.gnupg/*)",
+      "mcp__plugin_figma_figma__send_code_connect_mappings",
+      "mcp__plugin_figma_figma__add_code_connect_map",
+      "mcp__plugin_figma_figma__create_design_system_rules",
+      "mcp__plugin_figma_figma__generate_figma_design",
+      "mcp__plugin_figma_figma__generate_diagram"
+    ],
+    "ask": [
+      "Bash(rm:*)",
+      "Bash(mv:*)",
+      "Bash(chmod:*)",
+      "Bash(chown:*)",
+      "Bash(kill:*)",
+      "Bash(killall:*)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(yarn add:*)",
+      "Bash(yarn remove:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pip install:*)",
+      "Bash(brew:*)",
+      "Write(~/.bashrc)",
+      "Write(~/.zshrc)",
+      "Write(~/.profile)"
+    ],
+    "additionalDirectories": [
+      "{{HOME}}/.claude/plans",
+      "{{HOME}}/.claude/skills",
+      "/tmp",
+      "{{HOME}}/Work/graphql/src/domain/leads-from-favs",
+      "{{HOME}}/.claude",
+      "{{HOME}}/Work/.claude"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/hooks/security-check.js"
+          },
+          {
+            "type": "command",
+            "command": "node ~/.claude/hooks/console-log-detector.js",
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/hooks/use-dedicated-tools.js"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/cleanup-reminder.py",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude Code needs your attention\" with title \"Claude Code\" sound name \"Glass\"'",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/preserve-context.py"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "typescript-lsp@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "ui-design@claude-code-workflows": true,
+    "figma@claude-plugins-official": true
+  },
+  "effortLevel": "high"
+}

@@ -14,3 +14,13 @@
 
 # Backup directory (if accidentally in repo)
 .dotfiles_backup/
+
+# Claude Code machine-specific settings
+config/claude-code/*/settings.local.json
+
+# Claude Code runtime artifacts
+config/claude-code/global/projects/
+config/claude-code/global/todos/
+
+# Binary plist artifacts
+*.plist.binary

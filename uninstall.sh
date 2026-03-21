@@ -34,6 +34,7 @@ fi
 
 # Files that were symlinked
 SYMLINKED_FILES=(
+    # Shell & Git
     "$HOME/.zshrc"
     "$HOME/.zprofile"
     "$HOME/.zsh-functions"
@@ -41,6 +42,24 @@ SYMLINKED_FILES=(
     "$HOME/.gitconfig"
     "$HOME/.gitignore_global"
     "$HOME/.editorconfig"
+    # Claude Code (global tier)
+    "$HOME/.claude/CLAUDE.md"
+    "$HOME/.claude/.mcp.json"
+    "$HOME/.claude/hooks/security-check.js"
+    "$HOME/.claude/hooks/console-log-detector.js"
+    "$HOME/.claude/hooks/use-dedicated-tools.js"
+    "$HOME/.claude/hooks/cleanup-reminder.py"
+    "$HOME/.claude/hooks/preserve-context.py"
+    "$HOME/.claude/hooks/mcp-tool-suggester.py"
+    "$HOME/.claude/rules/config-hierarchy.md"
+    "$HOME/.claude/rules/web-fetching.md"
+    # Cursor
+    "$HOME/Library/Application Support/Cursor/User/settings.json"
+    "$HOME/Library/Application Support/Cursor/User/keybindings.json"
+    # iTerm2
+    "$HOME/Library/Application Support/iTerm2/DynamicProfiles/dotfiles-profile.json"
+    # GitHub CLI
+    "$HOME/.config/gh/config.yml"
 )
 
 # =============================================================================
