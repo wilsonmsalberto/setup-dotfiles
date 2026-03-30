@@ -97,6 +97,9 @@ setup_gitconfig() {
     # Create symlink to global gitignore
     create_symlink "$CONFIG_DIR/gitignore_global" "$HOME/.gitignore_global"
 
+    # Create symlink to editorconfig
+    create_symlink "$CONFIG_DIR/editorconfig" "$HOME/.editorconfig"
+
     success "Git configuration files linked"
 }
 

@@ -176,7 +176,7 @@ install_from_brewfile() {
     fi
 
     # Install all non-commented items from Brewfile
-    retry brew bundle --file="$BREWFILE" --no-lock
+    retry brew bundle --file="$BREWFILE"
 
     success "Brewfile packages installed"
 }

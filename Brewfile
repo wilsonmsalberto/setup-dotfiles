@@ -6,12 +6,6 @@
 # Clean up unlisted: brew bundle cleanup
 # =============================================================================
 
-# =============================================================================
-# Taps
-# =============================================================================
-
-tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
 
 # =============================================================================
 # Essential CLI Tools
@@ -83,16 +77,6 @@ cask "iterm2"                 # Better terminal for macOS
 cask "font-meslo-lg-nerd-font"  # Nerd Font for Powerlevel10k
 
 # =============================================================================
-# Quick Look Plugins
-# =============================================================================
-# Enhance Finder's Quick Look (press space on files)
-
-cask "qlcolorcode"            # Syntax highlighting in Quick Look
-cask "qlstephen"              # Quick Look for files without extension
-cask "qlmarkdown"             # Quick Look for Markdown files
-cask "webpquicklook"          # Quick Look for WebP images
-
-# =============================================================================
 # Code Editors
 # =============================================================================
 
@@ -104,7 +88,7 @@ cask "cursor"                 # AI-powered code editor
 # =============================================================================
 
 cask "bartender"              # Menu bar organizer
-cask "caffeine"               # Prevent Mac from sleeping
+cask "domzilla-caffeine"      # Prevent Mac from sleeping (auto-updates)
 cask "meetingbar"             # Calendar meetings in menu bar
 cask "notunes"                # Prevent iTunes/Music from opening
 

@@ -58,7 +58,7 @@ update_homebrew() {
     brew upgrade
 
     info "Installing any new packages from Brewfile..."
-    brew bundle --file="$SCRIPT_DIR/Brewfile" --no-lock || true
+    brew bundle --file="$SCRIPT_DIR/Brewfile" || true
 
     # Cleanup
     brew cleanup -s

@@ -6,121 +6,126 @@
 # =============================================================================
 
 [user]
-    name = Wilson Alberto
-    email = wilsonalberto@gmail.com
+	name = Wilson Alberto
+	email = wilsonalberto@gmail.com
 
 [credential]
-    helper = osxkeychain
+	helper = osxkeychain
 
 [push]
-    default = simple
-    autoSetupRemote = true
+	default = current
+	autoSetupRemote = true
 
 [init]
-    defaultBranch = main
+	defaultBranch = main
 
 [core]
-    excludesfile = ~/.gitignore_global
-    whitespace = space-before-tab,-indent-with-non-tab,trailing-space
-    trustctime = false
-    editor = nano
-    compression = 0
-    pager = delta
+	excludesfile = ~/.gitignore_global
+	whitespace = space-before-tab,-indent-with-non-tab,trailing-space
+	trustctime = false
+	editor = nano
+	compression = 0
+	pager = delta
 
 [color]
-    ui = auto
+	ui = auto
 
 [color "branch"]
-    current = yellow reverse
-    local = yellow
-    remote = green
+	current = yellow reverse
+	local = yellow
+	remote = green
 
 [color "diff"]
-    meta = yellow bold
-    frag = magenta bold
-    old = red
-    new = green
+	meta = yellow bold
+	frag = magenta bold
+	old = red
+	new = green
 
 [color "status"]
-    added = yellow
-    changed = green
-    untracked = cyan
+	added = yellow
+	changed = green
+	untracked = cyan
 
 [diff]
-    renames = copies
+	renames = copies
+	colorMoved = default
 
 [help]
-    autocorrect = 1
+	autocorrect = 1
 
 [merge]
-    log = true
+	log = true
+	conflictstyle = diff3
 
 [pull]
-    rebase = true
+	rebase = false
 
 [interactive]
-    diffFilter = delta --color-only
+	diffFilter = delta --color-only
 
 [add.interactive]
-    useBuiltin = false
+	useBuiltin = false
 
 [delta]
-    side-by-side = true
-    line-numbers = true
-    syntax-theme = Dracula
-    navigate = true
-    hyperlinks = true
-    features = side-by-side line-numbers decorations
+	side-by-side = true
+	line-numbers = true
+	syntax-theme = Dracula
+	navigate = true
+	hyperlinks = true
+	features = side-by-side line-numbers decorations
+	light = false
 
 [delta "decorations"]
-    commit-decoration-style = bold yellow box ul
-    file-style = bold yellow ul
-    file-decoration-style = none
+	commit-decoration-style = bold yellow box ul
+	file-style = bold yellow ul
+	file-decoration-style = none
 
 # =============================================================================
 # Aliases
 # =============================================================================
 
 [alias]
-    # User switching
-    homeuser = config user.email wilsonalberto@gmail.com
-    workuser = config user.email wilson.alberto@olx.com
-    user = config user.email
+	# User switching
+	homeuser = !git config user.email 'wilsonalberto@gmail.com' && echo 'Switched to home user: wilsonalberto@gmail.com'
+	workuser = !git config user.email 'wilson.alberto@olx.com' && echo 'Switched to work user: wilson.alberto@olx.com'
+	user = config user.email
 
-    # Commit
-    amend = commit -C HEAD --amend
-    ammend = commit -C HEAD --amend
+	# Commit
+	amend = commit --amend --no-edit
+	ammend = commit -C HEAD --amend
 
-    # Checkout
-    go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
-    co = checkout
+	# Checkout
+	go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
+	co = checkout
 
-    # Clean
-    rmerged = "!git branch --merged | grep  -v '\\*\\|master\\|develop' | xargs -n 1 git branch -d && git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d"
-    upd = !git pull --all && git fetch --prune && git rmerged
-    fupd = !git co master && git upd
+	# Clean
+	rmerged = "!git branch --merged | grep  -v '\\*\\|main\\|develop' | xargs -n 1 git branch -d && git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d"
+	upd = !git pull --all && git fetch --prune && git rmerged
+	fupd = !git co main && git upd
 
-    # Status
-    tags = tag -l
-    branches = branch -a
-    remotes = remote -v
-    lg = log --graph --pretty='format:%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-    fd = diff --cached
-    fdif = diff --cached
-    fdiff = diff --cached
+	# Status
+	tags = tag -l
+	branches = branch -a
+	remotes = remote -v
+	lg = log --oneline --graph --decorate
+	fd = diff --cached
+	fdif = diff --cached
+	fdiff = diff --cached
 
-    # Shortcuts
-    st = status
-    br = branch
-    ci = commit
-    df = diff
+	# Shortcuts
+	st = status
+	br = branch
+	ci = commit
+	df = diff
 
-    # List contributors with number of commits
-    contributors = shortlog --summary --numbered
+	# List contributors with number of commits
+	contributors = shortlog --summary --numbered
+	last = log -1 HEAD --stat
+	unstage = reset HEAD --
 
 # =============================================================================
 # Include local config if present
 # =============================================================================
 
 [include]
-    path = ~/.gitconfig.local
+	path = ~/.gitconfig.local

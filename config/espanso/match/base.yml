@@ -1,0 +1,35 @@
+# Espanso Text Expansions
+# Documentation: https://espanso.org/docs/matches/basics/
+
+matches:
+  # Email addresses
+  - trigger: ":email"
+    replace: "wilsonalberto@gmail.com"
+
+  - trigger: ":wemail"
+    replace: "wilson.alberto@olx.com"
+
+  # Date/time
+  - trigger: ":date"
+    replace: "{{date}}"
+    vars:
+      - name: date
+        type: date
+        params:
+          format: "%Y-%m-%d"
+
+  - trigger: ":time"
+    replace: "{{time}}"
+    vars:
+      - name: time
+        type: date
+        params:
+          format: "%H:%M"
+
+  - trigger: ":now"
+    replace: "{{now}}"
+    vars:
+      - name: now
+        type: date
+        params:
+          format: "%Y-%m-%d %H:%M"

@@ -228,62 +228,6 @@ setup_global_skills() {
     success "Global skills set up"
 }
 
-install_plugins() {
-    info "Installing Claude Code plugins..."
-
-    local plugins_file="$CLAUDE_CONFIG_DIR/plugins.txt"
-
-    if [[ ! -f "$plugins_file" ]]; then
-        warning "Plugins file not found: $plugins_file"
-        return 0
-    fi
-
-    # Check if claude CLI is available for plugin management
-    if ! command -v claude &>/dev/null; then
-        warning "Claude CLI not found, skipping plugin installation"
-        return 0
-    fi
-
-    while IFS= read -r line; do
-        # Skip comments and empty lines
-        [[ "$line" =~ ^[[:space:]]*# ]] && continue
-        [[ -z "${line// /}" ]] && continue
-
-        # Parse: name@registry status
-        local plugin_ref status
-        plugin_ref=$(echo "$line" | awk '{print $1}')
-        status=$(echo "$line" | awk '{print $2}')
-
-        if [[ -z "$plugin_ref" ]] || [[ -z "$status" ]]; then
-            warning "Skipping malformed plugin line: $line"
-            continue
-        fi
-
-        if [[ "$DRY_RUN" == true ]]; then
-            info "[DRY-RUN] Would install plugin: $plugin_ref (status: $status)"
-            continue
-        fi
-
-        # Install plugin (|| true to handle already-installed)
-        info "Installing plugin: $plugin_ref"
-        claude plugins install "$plugin_ref" || true
-
-        # Enable or disable based on status
-        local plugin_name
-        plugin_name=$(echo "$plugin_ref" | cut -d'@' -f1)
-
-        if [[ "$status" == "enabled" ]]; then
-            claude plugins enable "$plugin_name" || true
-            info "Enabled plugin: $plugin_name"
-        elif [[ "$status" == "disabled" ]]; then
-            claude plugins disable "$plugin_name" || true
-            info "Disabled plugin: $plugin_name"
-        fi
-    done < "$plugins_file"
-
-    success "Plugins installed"
-}
-
 setup_work_tier() {
     info "Setting up Work tier Claude Code configuration..."
 
@@ -468,7 +412,6 @@ main() {
     setup_global_hooks
     setup_global_rules
     setup_global_skills
-    install_plugins
     setup_work_tier
     setup_playground_tier
 

@@ -51,5 +51,6 @@
     "git.blame.editorDecoration.enabled": true,
     "git.autorefresh": true,
     "git.autorefreshInterval": 30000,
-    "explorer.confirmDragAndDrop": false
+    "explorer.confirmDragAndDrop": false,
+    "gitlens.currentLine.enabled": false
 }
