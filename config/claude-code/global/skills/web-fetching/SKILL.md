@@ -1,6 +1,6 @@
 ---
-description: Web fetching strategy - tool selection decision tree for MCP tools
-alwaysApply: false
+name: web-fetching
+description: Use when fetching, scraping, crawling, or searching web content, or looking up library documentation - picks between Firecrawl, Playwright, WebFetch, context7, and claude-in-chrome, and lists the Cloudflare/SPA failure modes for each.
 ---
 
 # Web Fetching Strategy
@@ -16,7 +16,7 @@ Need web content?
 ├── Simple API / raw HTML / quick check
 │   └── WebFetch (built-in) — no MCP dependency, good for simple static
 ├── Debugging live page state
-│   └── Chrome DevTools — inspect DOM, evaluate JS, NOT for fetching
+│   └── claude-in-chrome — inspect DOM, evaluate JS, NOT for fetching
 └── Library docs lookup
     └── context7 — resolve-library-id → query-docs
 ```
@@ -31,7 +31,7 @@ Need web content?
 | Simple static HTML | WebFetch | Built-in, no API key needed |
 | Check if URL is reachable | WebFetch | Lightweight probe |
 | Web/image/news search | Firecrawl | `search`, `deep_research` actions |
-| Inspect live page state | Chrome DevTools | DOM + JS evaluation |
+| Inspect live page state | claude-in-chrome | DOM + JS evaluation |
 | Crawl multiple pages | Firecrawl | `crawl` + `map` actions |
 
 ## What Does NOT Work
@@ -39,7 +39,7 @@ Need web content?
 - **WebFetch on Cloudflare sites** — returns 403 + `cf-ray` header or "Just a moment..." challenge page
 - **WebFetch on SPAs** — returns empty shell (no JS execution)
 - **User-Agent spoofing via fetch** — Cloudflare fingerprints beyond UA string
-- **Chrome DevTools as a fetcher** — meant for debugging, not scraping
+- **claude-in-chrome as a fetcher** — meant for debugging, not scraping
 
 ## Error Patterns to Recognize
 
@@ -76,4 +76,4 @@ await page.waitForTimeout(3000);
 1. **Firecrawl** — first choice for any web content extraction
 2. **Playwright** — when Firecrawl fails or page needs interaction
 3. **WebFetch** — simple/quick checks, no external dependency
-4. **Chrome DevTools** — debugging only, not fetching
+4. **claude-in-chrome** — debugging only, not fetching

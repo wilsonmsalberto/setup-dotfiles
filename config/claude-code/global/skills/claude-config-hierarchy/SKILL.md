@@ -1,3 +1,8 @@
+---
+name: claude-config-hierarchy
+description: Use when adding or moving Claude Code configuration - settings, hooks, plugins, skills, agents, permissions, plans - to decide which tier it belongs in (global, Work, per-project, Playground) and to avoid the known anti-patterns.
+---
+
 # Configuration Hierarchy Rules
 
 ## Tier Structure
